@@ -1,0 +1,47 @@
+version: '3.3'
+services:
+ kafka:
+  image: spotify/kafka
+  ports:
+   - "9092:9092"
+  networks:
+   - docker-elk
+  environment:
+   - ADVERTISED_HOST=localhost
+ neo4jdb:
+   image: neo4j:latest
+   hostname: neo4jdb
+   ports:
+    - "7474:7474"
+    - "7473:7473"
+    - "7687:7687"
+   networks:
+    - docker-elk
+   volumes:
+    - /var/lib/neo4j/import:/var/lib/neo4j/import
+    - /var/lib/neo4j/data:/datax
+    - /var/lib/neo4j/conf:/conf
+   environment:
+    - NEO4J_dbms_active__database=graphImport.db
+ elasticsearch:
+   image: elasticsearch:latest
+   ports:
+    - "9200:9200"
+    - "9300:9300"
+   networks:
+    - docker-elk
+   volumes:
+    - esdata1:/usr/share/elasticsearch/data
+ kibana:
+   image: kibana:latest
+   ports:
+    - "5601:5601"
+   networks:
+    - docker-elk
+volumes:
+   esdata1:
+    driver: local
+
+networks:
+  docker-elk:
+    driver: bridge

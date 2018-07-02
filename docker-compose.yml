@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+ producer-demo:
+   build:
+    context: .
+    dockerfile: Dockerfile
+    args:
+     - ARG_CLASS=producer
+     - HOST=neo4jdb
+   volumes:
+    - ./:/workdir
+   working_dir: /workdir
+   networks:
+    - common_docker-elk
+
+networks:
+  common_docker-elk:
+    external: true
